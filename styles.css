@@ -11,6 +11,7 @@ body {
 }
 
 .container {
+  padding-top: 10px;
   position: relative;
   height: 100vh;
   max-height: 100vh;
@@ -25,7 +26,6 @@ body {
 
 #text {
   position: relative;
-  top: 222px;
   width: calc(100% - 8px);
   height: 14px;
   border: 2px gray solid;
@@ -33,9 +33,13 @@ body {
   resize: none;
   outline: none;
   overflow: hidden;
-  /*margin-top: 20px;
-  margin-bottom: 20px;*/
-  /*height: 12px;*/
+}
+
+#spacer {
+  background-color: blue;
+  width: calc(100% - 4px);
+  border: 2px gray solid;
+  height: 300px;
 }
 
 #fake {
@@ -49,4 +53,5 @@ body {
   height: 14px;
   background-color: blue;
   top: 238px;
+  z-index: 100;
 }
