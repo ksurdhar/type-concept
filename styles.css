@@ -42,10 +42,6 @@ body {
   height: 300px;
 }
 
-#fake {
-  visibility: hidden;
-}
-
 .bar {
   position: absolute;
   opacity: 0.2;

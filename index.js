@@ -19,16 +19,20 @@ document.onreadystatechange = function() {
       // 14px per row, top starts at 4px
       // 222px is the alignment line
       var currentRow = ((coordinates.top - 4) / 14);
-      textarea.style['margin-top'] = `${222 - (14 * currentRow)}px`;
+      textarea.style['top'] = `${212 - (14 * currentRow)}px`;
 
-      // maybe instead of adjusting top, we adjust container padding
+      // once the textarea's top is 0, start scrolling instead of repositioning
+      // just ensure that the height of the text area is no more than what takes up
+      // the top of the screen to the middle, activated line.
 
+      // this way we have a scroll bar and ought to be able to scroll up to the top if necessary.
+      // when typing 
 
       console.log('--------------------------------------');
       // console.log('COORDINATES: ', coordinates);
-      console.log('TOTAL ROWS:', textarea.rows);
-      console.log('CURRENT ROW: ', currentRow);
-      console.log('HEIGHT: ', textarea.style.height);
+      // console.log('TOTAL ROWS:', textarea.rows);
+      // console.log('CURRENT ROW: ', currentRow);
+      // console.log('HEIGHT: ', textarea.style.height);
     }
     textArea.addEventListener("input", onInputHandler);
 
@@ -39,20 +43,8 @@ document.onreadystatechange = function() {
     //   debugger
     //   textarea.style['margin-top'] = -top + 'px';
     // }
-
-    // var maxCharCount;
-    // var hiddenTextArea = document.getElementById('fake');
-    // function calculateRowChars() {
-    //   var baseScrollHeight = hiddenTextArea.scrollHeight;
-    //   while(hiddenTextArea.scrollHeight === baseScrollHeight) {
-    //     hiddenTextArea.value += 'a';
-    //     if(hiddenTextArea.scrollHeight > baseScrollHeight) {
-    //       console.log('MAX CHARS', maxCharacters);
-    //       return maxCharacters
-    //     }
-    //     maxCharacters = hiddenTextArea.value.length;
-    //   }
-    // }
-    // maxCharCount = calculateRowChars();
   }
 }
+
+// given the current row and the height, position the text area via top or margin top
+// instead of/
