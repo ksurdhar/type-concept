@@ -6,14 +6,25 @@ document.onreadystatechange = function() {
     var CoordinateHelper = new CaretCoordinates(textArea);
 
     function resizeAndRecenter(evt) {
-      resize();
-      recenter();
+      setTimeout(resize(), 10);
+      recenter()
     }
 
     function resize() {
-      text = document.getElementById('text');
-      text.style.height = 'auto';
-      text.style.height = text.scrollHeight+'px';
+      // create offscreen clone
+      var text = document.getElementById('text');
+      var offScreen = document.getElementById('offscreen');
+      var clone = text.cloneNode(false);
+      clone.style.position = 'absolute';
+      clone.style.left = '-999em';
+      offScreen.appendChild(clone);
+
+      // determine if resize necessary
+      clone.style.height = 'auto';
+      if (text.style.height !== clone.scrollHeight && clone.scrollHeight !== 0) {
+        text.style.height = clone.scrollHeight+'px';
+      }
+      offScreen.removeChild(clone);
     }
 
     function recenter() {

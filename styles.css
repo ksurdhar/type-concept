@@ -5,44 +5,49 @@ html{
 body {
   display: flex;
   align-items: center;
-  background:#728EB2;
+  /* background:#728EB2; */
   overflow: hidden;
   height: calc(100% - 20px);
   padding-bottom: 20px;
+}
+
+#offscreen {
+  visibility: hidden;
 }
 
 .container {
   position: relative;
   height: 100%;
   flex: auto;
-  margin-left: 15%;
-  margin-right: 15%;
+  margin-left: 10%;
+  margin-right: 10%;
   border: 2px #556677 solid;
   border-radius: 8px;
   overflow: scroll;
-  background-color: #eff2f7;
+  /* background-color: #eff2f7; */
 }
 
 #text {
   width: calc(100% - 8px);
   height: 14px;
-  border: 2px gray solid;
+  /* border: 2px gray solid; */
   font: 12px courier;
   resize: none;
   outline: none;
   overflow: hidden;
+  border: none;
 }
 
 #top-spacer {
-  background-color: lightblue;
+  /* background-color: lightblue; */
   height: calc(50% - 10px);
-  border: lightpink 1px solid;
+  /* border: lightpink 1px solid; */
 }
 
 #bottom-spacer {
-  background-color: lightblue;
+  /* background-color: lightblue; */
   height: calc(50% - 10px);
-  border: lightpink 1px solid;
+  /* border: lightpink 1px solid; */
 }
 
 .bar {
