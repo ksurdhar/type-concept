@@ -5,27 +5,25 @@ html{
 body {
   display: flex;
   align-items: center;
-  min-height: 100%;
   background:#728EB2;
-  overflow-y: hidden;
+  overflow: hidden;
+  height: calc(100% - 20px);
+  padding-bottom: 20px;
 }
 
 .container {
-  padding-top: 10px;
   position: relative;
-  height: 100vh;
-  max-height: 100vh;
+  height: 100%;
   flex: auto;
-  margin-left: 25%;
-  margin-right: 25%;
+  margin-left: 15%;
+  margin-right: 15%;
   border: 2px #556677 solid;
   border-radius: 8px;
   overflow: scroll;
-  /*bottom: 100px;*/
+  background-color: #eff2f7;
 }
 
 #text {
-  position: relative;
   width: calc(100% - 8px);
   height: 14px;
   border: 2px gray solid;
@@ -35,16 +33,21 @@ body {
   overflow: hidden;
 }
 
-#spacer {
-  background-color: blue;
-  width: calc(100% - 4px);
-  border: 2px gray solid;
-  height: 300px;
+#top-spacer {
+  background-color: lightblue;
+  height: calc(50% - 10px);
+  border: lightpink 1px solid;
+}
+
+#bottom-spacer {
+  background-color: lightblue;
+  height: calc(50% - 10px);
+  border: lightpink 1px solid;
 }
 
 .bar {
   position: absolute;
-  opacity: 0.2;
+  opacity: 0.0;
   width: 100%;
   height: 14px;
   background-color: blue;
