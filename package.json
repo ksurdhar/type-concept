@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "css-loader": "^2.1.1",
+    "file-loader": "^3.0.1",
     "rimraf": "^2.5.4",
-    "textarea-caret-position": "^0.1.1",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "textarea-caret": "^3.1.0"
+  }
 }

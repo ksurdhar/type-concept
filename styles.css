@@ -1,9 +1,15 @@
-html{
+
+html {
   height: 100%;
+  /* font-family: 'Crimson Text', serif; */
+}
+
+::-webkit-scrollbar {
+  width: 0px;  /* Remove scrollbar space */
+  background: transparent;  /* Optional: just make scrollbar invisible */
 }
 
 body {
-  display: flex;
   align-items: center;
   /* background:#728EB2; */
   overflow: hidden;
@@ -13,21 +19,23 @@ body {
 
 #offscreen {
   visibility: hidden;
+  left: -999em;
 }
 
 .container {
   position: relative;
   height: 100%;
   flex: auto;
-  margin-left: 10%;
-  margin-right: 10%;
-  border: 2px #556677 solid;
+  padding-left: 10%;
+  padding-right: 10%;
+  /* border: 2px #556677 solid; */
   border-radius: 8px;
   overflow: scroll;
   /* background-color: #eff2f7; */
 }
 
 #text {
+  font-family: 'Times New Roman', serif;
   width: calc(100% - 8px);
   height: 14px;
   /* border: 2px gray solid; */
@@ -38,25 +46,14 @@ body {
   border: none;
 }
 
-#top-spacer {
+.top-spacer {
   /* background-color: lightblue; */
-  height: calc(50% - 10px);
+  height: calc(40% - 10px);
   /* border: lightpink 1px solid; */
 }
 
-#bottom-spacer {
+.bottom-spacer {
   /* background-color: lightblue; */
-  height: calc(50% - 10px);
+  height: calc(60% - 10px);
   /* border: lightpink 1px solid; */
-}
-
-.bar {
-  position: absolute;
-  opacity: 0.0;
-  width: 100%;
-  height: 14px;
-  background-color: blue;
-  top: 238px;
-  z-index: 100;
-  pointer-events: none;
 }
