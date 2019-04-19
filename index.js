@@ -1,4 +1,7 @@
 var getCaretCoordinates = require('textarea-caret');
+const { ipcRenderer } = require('electron');
+const path = require('path')
+const { OPEN_DOCUMENT } = require(path.resolve('./actions/types'))
 
 document.onreadystatechange = function() {
   if (document.readyState == 'interactive') {
@@ -8,6 +11,12 @@ document.onreadystatechange = function() {
 
     textArea.style.fontFamily = 'Merriweather'
     textArea.style.fontSize = '17px'
+
+    ipcRenderer.on(OPEN_DOCUMENT, (event, data) => { // when saved show notification on screen
+      console.log('EVENT', event)
+      console.log('DATAAAAA', data)
+      textArea.value = data
+    })
 
     function resizeAndRecenter(evt) {
       resize()
