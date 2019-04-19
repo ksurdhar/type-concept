@@ -22,14 +22,12 @@ document.onreadystatechange = function() {
       var clone = container.cloneNode(true);
       clone.style.left = '-999em';
       offScreen.appendChild(clone);
-      var clonedText = offscreen.getElementsByTagName('textarea')[0];
+      
       // determine if resize necessary
+      var clonedText = offscreen.getElementsByTagName('textarea')[0];
       clonedText.style.height = 'auto';
-      // console.log("CLONE CLIENT HEIGHT", clonedText.clientHeight)
-      // console.log("CLONE SCROLL HEIGHT", clonedText.scrollHeight)
-      // console.log("CLONE OFFSET HEIGHT", clonedText.offsetHeight)
       if (text.style.height !== clonedText.scrollHeight && clonedText.scrollHeight !== 0) {
-        text.style.height = clonedText.scrollHeight + 'px'; // adding height seems to fix everything
+        text.style.height = clonedText.scrollHeight + 'px';
       }
       offScreen.removeChild(clone);
     }
@@ -37,16 +35,12 @@ document.onreadystatechange = function() {
     function recenter() {
       var text = document.getElementById('text');
       var coordinates = getCaretCoordinates(text, text.selectionStart);
-      // console.log('COORDS TOP:', coordinates.top)
-      // console.log("CLIENT HEIGHT", text.clientHeight)
-      // console.log("SCROLL HEIGHT", text.scrollHeight)
-      // console.log("OFFSET HEIGHT", text.offsetHeight)
-
       var container = document.getElementById('container');
-      if (text.scrollHeight !== text.clientHeight) { // copy paste bug
-        console.log('uh oh')
+      if (text.scrollHeight !== text.clientHeight) {
+         // copy paste bug
+        console.log('uh oh - scrollheight does not match clientheight!')
       } 
-      container.scrollTo({top: coordinates.top, behavior: 'smooth'})
+      container.scrollTo({ top: coordinates.top, behavior: 'smooth' })
     }
 
     function onPointerDown(evt) {
