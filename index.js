@@ -16,6 +16,8 @@ document.onreadystatechange = function() {
       console.log('EVENT', event)
       console.log('DATAAAAA', data)
       textArea.value = data
+
+      setTimeout(resize, 1)
     })
 
     function resizeAndRecenter(evt) {
@@ -52,17 +54,14 @@ document.onreadystatechange = function() {
       container.scrollTo({ top: coordinates.top, behavior: 'smooth' })
     }
 
-    function onPointerDown(evt) {
-      setTimeout(resizeAndRecenter, 1)
-    }
-
-    function onKeyDown(evt) {
+    // timeouts are necessary on certain events, it would seem
+    function delayedResizeAndRecenter(evt) {
       setTimeout(resizeAndRecenter, 1)
     }
 
     textArea.addEventListener('input', resizeAndRecenter);
-    textArea.addEventListener('pointerdown', onPointerDown);
-    textArea.addEventListener('keydown', onKeyDown);
+    textArea.addEventListener('pointerdown', delayedResizeAndRecenter);
+    textArea.addEventListener('keydown', delayedResizeAndRecenter);
     textArea.addEventListener('blur', () => { textArea.focus() })
     textArea.focus()
   }
