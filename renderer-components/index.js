@@ -1,7 +1,7 @@
 var getCaretCoordinates = require('textarea-caret');
 const { ipcRenderer } = require('electron');
 const path = require('path')
-const { OPEN_DOCUMENT } = require(path.resolve('./actions/types'))
+const { OPEN_DOCUMENT, TEST } = require(path.resolve('./actions/types'))
 
 document.onreadystatechange = function() {
   if (document.readyState == 'interactive') {
@@ -19,6 +19,8 @@ document.onreadystatechange = function() {
 
       setTimeout(resize, 1)
     })
+
+    ipcRenderer.send(TEST, 'foo')
 
     function resizeAndRecenter(evt) {
       resize()

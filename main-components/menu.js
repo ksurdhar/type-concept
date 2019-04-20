@@ -5,15 +5,21 @@ const { OPEN_DOCUMENT } = require(path.resolve('./actions/types'))
 var fs = require('fs');
 
 module.exports = function(window){
+  let currentFilePath
+
   function openFile(path) {
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) return console.log(err);
-      // data is the contents of the text file we just read
       console.log('DATA', data)
+      currentFilePath = path
+      console.log('SETTING FILE PATH VAR TO', currentFilePath)
       window.webContents.send(OPEN_DOCUMENT, data)
-      // ipcRenderer.send(OPEN_DOCUMENT, { text: data })
     });
   }
+
+  // function saveFile() {
+  //   fs.writeFile(currentFilePath,)
+  // }
 
   return Menu.buildFromTemplate([
     {
@@ -29,12 +35,20 @@ module.exports = function(window){
         { 
           label: `Open`, click: () => {
             dialog.showOpenDialog({ 
-              properties: ['openFile'], 
-              filters: [{ name: 'Text Files', extensions: ['txt'] }] 
+              properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
             }, (fileData) => {
               console.log('FILE', fileData[0])
               openFile(fileData[0])
-
+            })
+          } 
+        },
+        { 
+          label: `Save`, click: () => {
+            dialog.showOpenDialog({ 
+              properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
+            }, (fileData) => {
+              console.log('FILE', fileData[0])
+              openFile(fileData[0])
             })
           } 
         }
