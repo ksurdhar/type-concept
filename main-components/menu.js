@@ -22,11 +22,32 @@ module.exports = function(window){
   }
 
   ipcMain.on(RENDERER_SENDING_SAVE_DATA, (event, arg) => {
-    console.log(event, arg)
-    fs.writeFile(currentFilePath, arg, (err, data) => {
-      if (err) return console.log(err);
-      console.log('wrote file!')
-    })
+    if (currentFilePath) {
+      fs.writeFile(currentFilePath, arg, (err, data) => {
+        if (err) return console.log(err);
+        console.log('saved existing file!')
+      })
+    } else {
+      // break out for saving new file
+      dialog.showSaveDialog({ filters: [{
+        name: 'Text Files',
+        extensions: ['txt']
+      }]}, (fileNameAndPath) => {
+        if (!fileNameAndPath) {
+          console.log('user cancelled action')
+          return
+        }
+        // update state
+        currentFilePath = fileNameAndPath
+
+        const writeStream = fs.createWriteStream(fileNameAndPath)
+        writeStream.once('open', () => {
+          writeStream.write(arg)
+          writeStream.end()
+          console.log('finished writing!')
+        })
+      })
+    }
   })
 
   // function saveFile() {
@@ -49,6 +70,10 @@ module.exports = function(window){
             dialog.showOpenDialog({ 
               properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
             }, (fileData) => {
+              if (!fileData) {
+                console.log('user cancelled action')
+                return
+              }
               sendFileToRenderer(fileData[0]) // file path
             })
           }

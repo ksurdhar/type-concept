@@ -22,6 +22,7 @@ document.onreadystatechange = function() {
       textArea.value = data
 
       setTimeout(resize, 1)
+      // should set the cursor selection
     })
 
     ipcRenderer.on(INITIATE_SAVE, (event) => {
