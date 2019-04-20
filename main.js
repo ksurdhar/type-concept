@@ -1,6 +1,5 @@
 
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
-const { TEST } = require('./actions/types');
+const { app, BrowserWindow, Menu } = require('electron');
 const menu = require('./main-components/menu.js');
 let mainWindow
 
@@ -20,7 +19,7 @@ function createWindow () {
   })
 }
 
-ipcMain.on(TEST, (event, arg) => { console.log('TEST RECEIVED', arg)})
+// ipcMain.on(TEST, (event, arg) => { console.log('TEST RECEIVED', arg)})
 
 app.on('ready', createWindow)
 app.on('window-all-closed', function () {

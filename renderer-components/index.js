@@ -1,7 +1,11 @@
 var getCaretCoordinates = require('textarea-caret');
 const { ipcRenderer } = require('electron');
 const path = require('path')
-const { OPEN_DOCUMENT, TEST } = require(path.resolve('./actions/types'))
+const { 
+  OPEN_DOCUMENT, 
+  INITIATE_SAVE, 
+  RENDERER_SENDING_SAVE_DATA 
+} = require(path.resolve('./actions/types'))
 
 document.onreadystatechange = function() {
   if (document.readyState == 'interactive') {
@@ -20,7 +24,12 @@ document.onreadystatechange = function() {
       setTimeout(resize, 1)
     })
 
-    ipcRenderer.send(TEST, 'foo')
+    ipcRenderer.on(INITIATE_SAVE, (event) => {
+      console.log('RECEIEVED INITIATE SAVE')
+      ipcRenderer.send(RENDERER_SENDING_SAVE_DATA, textArea.value)
+    })
+
+    // ipcRenderer.send(TEST, 'foo')
 
     function resizeAndRecenter(evt) {
       resize()

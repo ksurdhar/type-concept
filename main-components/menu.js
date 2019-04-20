@@ -1,13 +1,17 @@
-const { app, Menu, dialog } = require('electron')
+const { app, Menu, dialog, ipcMain } = require('electron')
 const path = require('path')
-const { OPEN_DOCUMENT } = require(path.resolve('./actions/types'))
+const { 
+  OPEN_DOCUMENT, 
+  INITIATE_SAVE, 
+  RENDERER_SENDING_SAVE_DATA 
+} = require(path.resolve('./actions/types'))
 
 var fs = require('fs');
 
 module.exports = function(window){
   let currentFilePath
 
-  function openFile(path) {
+  function sendFileToRenderer(path) {
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) return console.log(err);
       console.log('DATA', data)
@@ -17,8 +21,16 @@ module.exports = function(window){
     });
   }
 
+  ipcMain.on(RENDERER_SENDING_SAVE_DATA, (event, arg) => {
+    console.log(event, arg)
+    fs.writeFile(currentFilePath, arg, (err, data) => {
+      if (err) return console.log(err);
+      console.log('wrote file!')
+    })
+  })
+
   // function saveFile() {
-  //   fs.writeFile(currentFilePath,)
+    // fs.writeFile(currentFilePath,)
   // }
 
   return Menu.buildFromTemplate([
@@ -37,19 +49,15 @@ module.exports = function(window){
             dialog.showOpenDialog({ 
               properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
             }, (fileData) => {
-              console.log('FILE', fileData[0])
-              openFile(fileData[0])
+              sendFileToRenderer(fileData[0]) // file path
             })
-          } 
+          }
         },
         { 
-          label: `Save`, click: () => {
-            dialog.showOpenDialog({ 
-              properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
-            }, (fileData) => {
-              console.log('FILE', fileData[0])
-              openFile(fileData[0])
-            })
+          label: `Save`, accelerator: "cmd+s", click: () => {
+            // send action to renderer to grab data
+            // return to main to save
+            window.webContents.send(INITIATE_SAVE)
           } 
         }
       ]
