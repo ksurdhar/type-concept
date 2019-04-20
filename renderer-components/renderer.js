@@ -4,7 +4,8 @@ const path = require('path')
 const { 
   OPEN_DOCUMENT, 
   INITIATE_SAVE, 
-  RENDERER_SENDING_SAVE_DATA 
+  INITIATE_NEW_FILE,
+  RENDERER_SENDING_SAVE_DATA
 } = require(path.resolve('./actions/types'))
 
 document.onreadystatechange = function() {
@@ -17,19 +18,20 @@ document.onreadystatechange = function() {
     textArea.style.fontSize = '17px'
 
     ipcRenderer.on(OPEN_DOCUMENT, (event, data) => { // when saved show notification on screen
-      console.log('EVENT', event)
-      console.log('DATAAAAA', data)
       textArea.value = data
-
+      textArea.setSelectionRange(0,0)
       setTimeout(resize, 1)
-      // should set the cursor selection
     })
 
     ipcRenderer.on(INITIATE_SAVE, (event, data) => {
       ipcRenderer.send(RENDERER_SENDING_SAVE_DATA, textArea.value, data.saveAs)
     })
 
-    // ipcRenderer.send(TEST, 'foo')
+    ipcRenderer.on(INITIATE_NEW_FILE, (event, data) => {
+      textArea.value = ''
+      textArea.setSelectionRange(0,0)
+      setTimeout(resize, 1)
+    })
 
     function resizeAndRecenter(evt) {
       resize()

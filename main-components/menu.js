@@ -3,6 +3,7 @@ const path = require('path')
 const { 
   OPEN_DOCUMENT, 
   INITIATE_SAVE, 
+  INITIATE_NEW_FILE,
   RENDERER_SENDING_SAVE_DATA 
 } = require(path.resolve('./actions/types'))
 
@@ -26,7 +27,6 @@ module.exports = function(window){
         console.log('saved existing file!')
       })
     } else {
-      // break out for saving new file
       dialog.showSaveDialog({ filters: [{
         name: 'Text Files',
         extensions: ['txt']
@@ -35,7 +35,6 @@ module.exports = function(window){
           console.log('user cancelled action')
           return
         }
-        // update state
         currentFilePath = fileNameAndPath
 
         const writeStream = fs.createWriteStream(fileNameAndPath)
@@ -48,10 +47,6 @@ module.exports = function(window){
     }
   })
 
-  // function saveFile() {
-    // fs.writeFile(currentFilePath,)
-  // }
-
   return Menu.buildFromTemplate([
     {
       label: `Engine`,
@@ -63,9 +58,16 @@ module.exports = function(window){
     {
       label: `File`,
       submenu: [
-        // add entry for new file
         { 
-          label: `Open`, click: () => {
+          label: `New File`, accelerator: "cmd+n", click: () => {
+            // probably save existing file first
+            currentFilePath = null
+            window.webContents.send(INITIATE_NEW_FILE)
+          } 
+        },
+        { type: 'separator' },
+        { 
+          label: `Open...`, accelerator: "cmd+o", click: () => {
             dialog.showOpenDialog({ 
               properties: ['openFile'], filters: [{ name: 'Text Files', extensions: ['txt'] }] 
             }, (fileData) => {
@@ -77,6 +79,7 @@ module.exports = function(window){
             })
           }
         },
+        { type: 'separator' },
         { 
           label: `Save`, accelerator: "cmd+s", click: () => {
             window.webContents.send(INITIATE_SAVE, { saveAs: false })
