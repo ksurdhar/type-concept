@@ -25,9 +25,8 @@ document.onreadystatechange = function() {
       // should set the cursor selection
     })
 
-    ipcRenderer.on(INITIATE_SAVE, (event) => {
-      console.log('RECEIEVED INITIATE SAVE')
-      ipcRenderer.send(RENDERER_SENDING_SAVE_DATA, textArea.value)
+    ipcRenderer.on(INITIATE_SAVE, (event, data) => {
+      ipcRenderer.send(RENDERER_SENDING_SAVE_DATA, textArea.value, data.saveAs)
     })
 
     // ipcRenderer.send(TEST, 'foo')

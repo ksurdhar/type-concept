@@ -14,16 +14,14 @@ module.exports = function(window){
   function sendFileToRenderer(path) {
     fs.readFile(path, 'utf8', function (err, data) {
       if (err) return console.log(err);
-      console.log('DATA', data)
       currentFilePath = path
-      console.log('SETTING FILE PATH VAR TO', currentFilePath)
       window.webContents.send(OPEN_DOCUMENT, data)
     });
   }
 
-  ipcMain.on(RENDERER_SENDING_SAVE_DATA, (event, arg) => {
-    if (currentFilePath) {
-      fs.writeFile(currentFilePath, arg, (err, data) => {
+  ipcMain.on(RENDERER_SENDING_SAVE_DATA, (event, data, saveAs) => {
+    if (currentFilePath && saveAs === false) {
+      fs.writeFile(currentFilePath, data, (err, data) => {
         if (err) return console.log(err);
         console.log('saved existing file!')
       })
@@ -42,7 +40,7 @@ module.exports = function(window){
 
         const writeStream = fs.createWriteStream(fileNameAndPath)
         writeStream.once('open', () => {
-          writeStream.write(arg)
+          writeStream.write(data)
           writeStream.end()
           console.log('finished writing!')
         })
@@ -65,6 +63,7 @@ module.exports = function(window){
     {
       label: `File`,
       submenu: [
+        // add entry for new file
         { 
           label: `Open`, click: () => {
             dialog.showOpenDialog({ 
@@ -80,9 +79,12 @@ module.exports = function(window){
         },
         { 
           label: `Save`, accelerator: "cmd+s", click: () => {
-            // send action to renderer to grab data
-            // return to main to save
-            window.webContents.send(INITIATE_SAVE)
+            window.webContents.send(INITIATE_SAVE, { saveAs: false })
+          } 
+        },
+        { 
+          label: `Save As...`, accelerator: "shift+cmd+s", click: () => {
+            window.webContents.send(INITIATE_SAVE, { saveAs: true })
           } 
         }
       ]
