@@ -28,22 +28,19 @@ body {
   flex: auto;
   padding-left: 10%;
   padding-right: 10%;
-  /* border: 2px #556677 solid; */
-  border-radius: 8px;
   overflow: scroll;
-  /* background-color: #eff2f7; */
 }
 
 #text {
   font-family: 'Times New Roman', serif;
   width: calc(100% - 8px);
   height: 14px;
-  /* border: 2px gray solid; */
   font: 12px courier;
   resize: none;
   outline: none;
   overflow: hidden;
   border: none;
+  background-color: transparent;
 }
 
 .top-spacer {

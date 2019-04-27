@@ -8,11 +8,15 @@ const {
   RENDERER_SENDING_SAVE_DATA
 } = require(path.resolve('./actions/types'))
 
+const { debounce } = require(path.resolve('./renderer-components/debounce'))
+
 document.onreadystatechange = function() {
   if (document.readyState == 'interactive') {
     var textArea = document.getElementById('text');
     // textArea.style.fontFamily = 'Lora'
     // textArea.style.fontSize = '18px'
+
+    console.log('dbounce', debounce)
 
     textArea.style.fontFamily = 'Merriweather'
     textArea.style.fontSize = '17px'
@@ -33,9 +37,9 @@ document.onreadystatechange = function() {
       setTimeout(resize, 1)
     })
 
-    function resizeAndRecenter(evt) {
+    function resizeAndRecenter(evt, animate) {
       resize()
-      recenter()
+      recenter(animate)
     }
 
     function resize() {
@@ -50,13 +54,15 @@ document.onreadystatechange = function() {
       // determine if resize necessary
       var clonedText = offscreen.getElementsByTagName('textarea')[0];
       clonedText.style.height = 'auto';
-      if (text.style.height !== clonedText.scrollHeight && clonedText.scrollHeight !== 0) {
+      const textHeight = parseInt(text.style.height.slice(0, -2))
+      if (textHeight !== clonedText.scrollHeight && clonedText.scrollHeight !== 0) {
+        console.log('resizing')
         text.style.height = clonedText.scrollHeight + 'px';
       }
       offScreen.removeChild(clone);
     }
 
-    function recenter() {
+    function recenter(animate = false) {
       var text = document.getElementById('text');
       var coordinates = getCaretCoordinates(text, text.selectionStart);
       var container = document.getElementById('container');
@@ -64,17 +70,24 @@ document.onreadystatechange = function() {
          // copy paste bug
         console.log('uh oh - scrollheight does not match clientheight!')
       } 
-      container.scrollTo({ top: coordinates.top, behavior: 'smooth' })
+
+      const options = { top: coordinates.top }
+      if (animate) {
+        options.behavior = 'smooth'
+      }
+      container.scrollTo(options)
     }
 
     // timeouts are necessary on certain events, it would seem
     function delayedResizeAndRecenter(evt) {
-      setTimeout(resizeAndRecenter, 1)
+      setTimeout(resizeAndRecenter.bind(null, null, true), 1)
     }
+
+    const debouncedResize = debounce(delayedResizeAndRecenter, 10)
 
     textArea.addEventListener('input', resizeAndRecenter);
     textArea.addEventListener('pointerdown', delayedResizeAndRecenter);
-    textArea.addEventListener('keydown', delayedResizeAndRecenter);
+    textArea.addEventListener('keydown', debouncedResize);
     textArea.addEventListener('blur', () => { textArea.focus() })
     textArea.focus()
   }
