@@ -13,13 +13,12 @@ const { debounce } = require(path.resolve('./renderer-components/debounce'))
 document.onreadystatechange = function() {
   if (document.readyState == 'interactive') {
     var textArea = document.getElementById('text');
+
     // textArea.style.fontFamily = 'Lora'
     // textArea.style.fontSize = '18px'
 
-    console.log('dbounce', debounce)
-
     textArea.style.fontFamily = 'Merriweather'
-    textArea.style.fontSize = '17px'
+    textArea.style.fontSize = '16px'
 
     ipcRenderer.on(OPEN_DOCUMENT, (event, data) => { // when saved show notification on screen
       textArea.value = data
@@ -39,7 +38,7 @@ document.onreadystatechange = function() {
 
     function resizeAndRecenter(evt, animate) {
       resize()
-      recenter(animate)
+      setTimeout(recenter(animate), 200)
     }
 
     function resize() {
@@ -64,7 +63,7 @@ document.onreadystatechange = function() {
 
     function recenter(animate = false) {
       var text = document.getElementById('text');
-      var coordinates = getCaretCoordinates(text, text.selectionStart);
+      var coordinates = getCaretCoordinates(text, text.selectionEnd);
       var container = document.getElementById('container');
       if (text.scrollHeight !== text.clientHeight) {
          // copy paste bug
@@ -83,12 +82,15 @@ document.onreadystatechange = function() {
       setTimeout(resizeAndRecenter.bind(null, null, true), 1)
     }
 
-    const debouncedResize = debounce(delayedResizeAndRecenter, 10)
+    // different debounce intervals for different interactions
+    const debouncedResize = debounce(delayedResizeAndRecenter, 300)
+    const fastDebounced = debounce(delayedResizeAndRecenter, 50)
 
-    textArea.addEventListener('input', resizeAndRecenter);
-    textArea.addEventListener('pointerdown', delayedResizeAndRecenter);
-    textArea.addEventListener('keydown', debouncedResize);
+    textArea.addEventListener('input', resizeAndRecenter)
+    textArea.addEventListener('mouseup', debouncedResize)
+    textArea.addEventListener('keydown', fastDebounced)
     textArea.addEventListener('blur', () => { textArea.focus() })
+
     textArea.focus()
   }
 }
