@@ -78,16 +78,52 @@ document.onreadystatechange = function() {
     }
 
     // timeouts are necessary on certain events, it would seem
+    function conditionalRnR(evt) {
+      clickCued = false
+      if (allowClick) {
+        setTimeout(resizeAndRecenter.bind(null, null, true), 1)
+      } 
+      else {
+        allowClick = true
+      }
+    }
+
     function delayedResizeAndRecenter(evt) {
+      clickCued = false
       setTimeout(resizeAndRecenter.bind(null, null, true), 1)
     }
 
     // different debounce intervals for different interactions
-    const debouncedResize = debounce(delayedResizeAndRecenter, 300)
+    const debouncedClick = debounce(conditionalRnR, 200)
+    const debouncedDblClick = debounce(delayedResizeAndRecenter, 100)
+
     const fastDebounced = debounce(delayedResizeAndRecenter, 50)
 
+
+    // on mousedown, if there is a click cued, prevent
+
+    let allowClick = true
+    let clickCued = false // set back to false when click action finishes or on cancel
+    textArea.addEventListener('click', () => {
+      console.log('click')
+      clickCued = true
+      debouncedClick()
+    })
+
+    textArea.addEventListener('mousedown', () => {
+      if (clickCued) {
+        allowClick = false
+      }
+      console.log('mousedown')
+    })
+
+      textArea.addEventListener('dblclick', () => {
+      console.log('dblclick')
+      debouncedDblClick()
+    })
+
     textArea.addEventListener('input', resizeAndRecenter)
-    textArea.addEventListener('mouseup', debouncedResize)
+    // textArea.addEventListener('mouseup', debouncedResize)
     textArea.addEventListener('keydown', fastDebounced)
     textArea.addEventListener('blur', () => { textArea.focus() })
 
